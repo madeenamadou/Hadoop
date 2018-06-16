@@ -1,0 +1,64 @@
+hadoop tutorials notes
+
+1/ ingestion de donnees structurees : sqoop, hive, impala, hue
+sqoop : permet de transferer des donnees structurees d'un systeme de bd relationnel vers hdfs, pour etre ensuite interroge avec des
+tels que hive ou impala. sqoop tranfere les donnees sans en changer la structutre
+
+hive: permet de stocker et interroger des donnees structurees dans hdfs, a partir du script sql
+
+impala: permet d'interroger des donnees strcuturees dans hive, lorsqu'elle sont au format parquet (les donnnees sont groupees par colomne,
+plutot que par ligne)
+
+Hue : fournit une interface web pour les applications hadoop comme hive, impala, permettant d'interagir avec les donnees
+hostname:8888
+
+sqoop
+# sqoop job : import db tables from to hive
+
+sqoop import \
+    --table order_items \
+    --as-parquetfile \
+sqoop import-all-tables \
+    -m 1 \
+    --connect jdbc:mysql://quickstart.cloudera:3306/retail_db \
+    --username=retail_dba \
+    --password=cloudera \
+    --compression-codec=snappy \
+    --warehouse-dir=/user/hive/warehouse/retail_db  \
+    --hive-import
+    
+    
+mapred.job.tracker is deprecated. Instead, use mapreduce.jobtracker.address
+mapred.jar is deprecated. Instead, use mapreduce.job.jar
+mapred.map.tasks is deprecated. Instead, use mapreduce.job.maps
+
+/usr/share/java/mysql-connector-java-5.1.17.jar
+sqoop import --connect jdbc:mysql://quickstart.cloudera/retail_db --retail_dba foo --table TEST
+hdfs://quickstart.cloudera:8020
+
+GRANT ALL PRIVILEGES ON *.* TO 'hue'@'%' identified by 'cloudera';
+
+grant all privileges on *.* to 'root'@'%' identified by 'cloudera';
+
+grant all privileges on *.* to 'cloudera'@'%' identified by 'cloudera';
+grant all privileges on retail_db.* to 'hue'@'%' identified by 'cloudera';
+
+FLUSH PRIVILEGES;
+
+SELECT User, Host, Password FROM mysql.user;
+
+SET PASSWORD FOR 'root'@'quickstart.cloudera' = PASSWORD('');
+installer Notebook???
+mysqladmin -u root -ptmppassword password '' --host "quickstart.cloudera"
+update user set password=password('') where user="root" and host="quickstart.cloudera";
+
+mysqld_safe --skip-grant-tables
+
+for daemon in ${DAEMONS}; do
+    sudo service ${daemon} restart
+done
+DAEMONS="
+hbase-master \
+hbase-rest \
+hbase-thrift \ 
+region server ??/"
